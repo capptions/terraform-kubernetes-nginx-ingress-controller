@@ -51,6 +51,24 @@ resource "kubernetes_config_map" "nginx_udp" {
   }
 }
 
+resource "kubernetes_secret_v1" "nginx_service_account_token" {
+  metadata {
+    name      = "${var.name}-serviceaccount-token"
+    namespace = kubernetes_namespace.nginx.metadata.0.name
+
+    annotations = {
+      "kubernetes.io/service-account.name" = "${var.name}-serviceaccount"
+    }
+
+    labels = {
+      "app.kubernetes.io/name"       = var.name
+      "app.kubernetes.io/part-of"    = kubernetes_namespace.nginx.metadata.0.name
+      "app.kubernetes.io/managed-by" = "terraform"
+    }
+  }
+  type = "kubernetes.io/service-account-token"
+}
+
 resource "kubernetes_service_account" "nginx" {
   metadata {
     name      = "${var.name}-serviceaccount"
@@ -277,7 +295,7 @@ resource "kubernetes_deployment" "nginx" {
 
           volume_mount {
             mount_path = "/var/run/secrets/kubernetes.io/serviceaccount"
-            name       = kubernetes_service_account.nginx.default_secret_name
+            name       = "${var.name}-serviceaccount-token"
             read_only  = true
           }
 
@@ -357,10 +375,10 @@ resource "kubernetes_deployment" "nginx" {
         }
 
         volume {
-          name = kubernetes_service_account.nginx.default_secret_name
+          name = "${var.name}-serviceaccount-token"
 
           secret {
-            secret_name = kubernetes_service_account.nginx.default_secret_name
+            secret_name = "${var.name}-serviceaccount-token"
           }
         }
       }
