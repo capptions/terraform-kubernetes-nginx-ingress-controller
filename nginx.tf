@@ -280,7 +280,7 @@ resource "kubernetes_deployment" "nginx" {
 
         container {
           name  = "nginx-ingress-controller"
-          image = "k8s.gcr.io/ingress-nginx/controller:v${var.nginx_ingress_controller_version}"
+          image = "registry.k8s.io/ingress-nginx/controller:v${var.nginx_ingress_controller_version}"
 
           args = [
             "/nginx-ingress-controller",
