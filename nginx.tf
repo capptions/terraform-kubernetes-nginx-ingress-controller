@@ -409,7 +409,7 @@ resource "kubernetes_limit_range" "nginx" {
   }
 }
 
-resource "kubernetes_pod_disruption_budget" "nginx" {
+resource "kubernetes_pod_disruption_budget_v1" "nginx" {
   count = var.controller_replicas > 1 ? 1 : 0
   metadata {
     name      = var.name
