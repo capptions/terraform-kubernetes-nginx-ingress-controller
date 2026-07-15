@@ -289,7 +289,7 @@ resource "kubernetes_deployment" "nginx" {
             "--udp-services-configmap=$(POD_NAMESPACE)/${kubernetes_config_map.nginx_udp.metadata.0.name}",
             "--publish-service=$(POD_NAMESPACE)/${var.name}",
             "--annotations-prefix=nginx.ingress.kubernetes.io",
-            "--enable-ssl-chain-completion=true",
+            "--enable-ssl-chain-completion=${var.enable_ssl_chain_completion}",
             "--election-id=${var.name}-leader"
           ]
 

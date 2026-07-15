@@ -61,6 +61,12 @@ variable "controller_replicas" {
 
 variable "disruption_budget_max_unavailable" {
   description = "The maximum unavailability of the nginx deployment"
-  type = string
-  default = "50%"
+  type        = string
+  default     = "50%"
+}
+
+variable "enable_ssl_chain_completion" {
+  description = "Let the controller rebuild/complete the certificate chain itself instead of serving the exact chain from the TLS secret. Keep this false so operator-provided intermediates (e.g. cross-signed roots needed by older clients) are served verbatim."
+  type        = bool
+  default     = false
 }
